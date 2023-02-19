@@ -1,18 +1,66 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import * as Location from "expo-location";
+import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
+
+const { width: SCREEN_SIZE } = Dimensions.get("window");
+
+console.log(SCREEN_SIZE);
 
 export default function App() {
+  const [city, setCity] = useState("Loading..");
+  const [location, setLocation] = useState(null);
+  const [ok, setOk] = useState(true);
+
+  const ask = async () => {
+    const { granted } = await Location.getForegroundPermissionsAsync();
+    if (!granted) {
+      setOk(false);
+    }
+    const {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync({ accuracy: 5 });
+    console.log(location);
+    const location = await Location.reverseGeocodeAsync(
+      { latitude, longitude },
+      { useGoogleMaps: false }
+    );
+    setCity(location[0].city);
+  };
+  useEffect(() => {
+    ask();
+  });
   return (
     <View style={styles.container}>
       <View style={styles.city}>
-        <Text style={styles.cityName}>Seoul</Text>
+        <Text style={styles.cityName}>{city}</Text>
       </View>
-      <View style={styles.weather}>
+      <ScrollView
+        pagingEnabled
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.weather}
+      >
         <View style={styles.day}>
           <Text style={styles.temp}>27</Text>
           <Text style={styles.description}>Sunny</Text>
         </View>
-      </View>
+        <View style={styles.day}>
+          <Text style={styles.temp}>27</Text>
+          <Text style={styles.description}>Sunny</Text>
+        </View>
+        <View style={styles.day}>
+          <Text style={styles.temp}>27</Text>
+          <Text style={styles.description}>Sunny</Text>
+        </View>
+        <View style={styles.day}>
+          <Text style={styles.temp}>27</Text>
+          <Text style={styles.description}>Sunny</Text>
+        </View>
+        <View style={styles.day}>
+          <Text style={styles.temp}>27</Text>
+          <Text style={styles.description}>Sunny</Text>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -31,11 +79,9 @@ const styles = StyleSheet.create({
     fontSize: 68,
     fontWeight: "500",
   },
-  weather: {
-    flex: 3,
-  },
+  weather: {},
   day: {
-    flex: 1,
+    width: SCREEN_SIZE,
     alignItems: "center",
   },
   temp: {
