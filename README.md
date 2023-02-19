@@ -31,3 +31,7 @@ console.log(SCREEN_SIZE);
 ```
 
 ## [expo-location](!https://docs.expo.dev/versions/latest/sdk/location/)
+
+## [oepnWeathermap Api](!https://openweathermap.org/api)
+
+## [expo/vector-iocns](!https://docs.expo.dev/guides/icons/)
