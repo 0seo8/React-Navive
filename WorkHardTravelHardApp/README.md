@@ -41,3 +41,97 @@ $ yarn start
 - `placeholderTextColor`를 이용해 글자의 색상을 변경할 수도 있습니다.
 - `onChangeText`를 통해 input value를 알아낼 수 있습니다.
 - `onSubmitEditing`를 통해 submit 이벤트를 적용시킬 수 있습니다.
+
+## [expo의 AsyncStorage module](!https://docs.expo.dev/versions/latest/sdk/async-storage/)
+
+### 1. 설치
+
+```shell
+$ npx expo install @react-native-async-storage/async-storage
+```
+
+### 2. Storing data
+
+- async, await를 항상 붙여서 사용해야합니다.
+- 객체의 경우 string으로 변환해줘야합니다.
+
+```js
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+//Storing string value
+const storeData = async (value) => {
+  try {
+    await AsyncStorage.setItem("@storage_Key", value);
+  } catch (e) {
+    // saving error
+  }
+};
+
+//Storing object value
+const storeData = async (value) => {
+  try {
+    const jsonValue = JSON.stringify(value);
+    await AsyncStorage.setItem("@storage_Key", jsonValue);
+  } catch (e) {
+    // saving error
+  }
+};
+```
+
+### 3. 사용
+
+Reading string value
+
+```js
+const getData = async () => {
+  try {
+    const value = await AsyncStorage.getItem("@storage_Key");
+    if (value !== null) {
+      // value previously stored
+    }
+  } catch (e) {
+    // error reading value
+  }
+};
+```
+
+Reading object value
+
+```js
+const getData = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem("@storage_Key");
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (e) {
+    // error reading value
+  }
+};
+```
+
+## [Alert Api](!https://reactnative.dev/docs/alert)
+
+alret창의 title과 message를 지정할 수 있습니다. alret의 경우 Andorid와 ios모두 작동하지만 prompt의 경우 ios에서만 작동이 가능합니다.
+
+또한 버튼을 사용을 할 수도 있으며, onPress함수를 통해 동작을 전달할 수도 있습니다.
+
+```js
+const deleteTodo = async (key: string) => {
+  Alert.alert("Delete To Do", "Are you sure", [
+    { text: "Cancel" },
+    {
+      text: "I'm sure",
+      onPress: () => {
+        const newToDos = { ...toDos };
+        delete newToDos[key];
+        setToDos(newToDos);
+        saveTodos(newToDos);
+      },
+    },
+  ]);
+  return;
+};
+```
+
+![](https://velog.velcdn.com/images/0seo8/post/a6e64ae8-c469-43f5-8ebf-f10bc84d6c4e/image.png)
+
+ios의 경우 버튼 alertButtonStyle을 통해 스타일도 지정을 할 수 있습니다.
